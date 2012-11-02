@@ -11,7 +11,7 @@ undefined) such that each task is passed to a single worker's callback function.
 
 ### Installation
 
-    $ npm install redisMsgQueue
+    $ npm install redis-msg-queue
 
 
 ### API

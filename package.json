@@ -1,11 +1,23 @@
 {
-  "name": "redisMsgQueue",
+  "version": "0.0.1",
+  "name": "redis-msg-queue",
   "description": "A lightweight message queue using redis as the data store.",
   "author": "Dan Prescott <danpres14@gmail.com> - Short Line Design Inc.",
+  "homepage": "https://github.com/Short-Line-Design/redisMsgQueue",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:Short-Line-Design/RedisMsgQueue.git"
+  },
   "dependencies": {
     "underscore": "1.4.x"
   },
   "devDependencies": {
   },
-  "engine": "node >= 0.8.9"
+  "engines": {
+    "node": ">= 0.8.9"
+  },
+  "keywords": [
+    "message queue",
+    "redis"
+  ]
 }
