@@ -68,11 +68,11 @@ queues.forEach(function (queue) {
     // Register the message queue workers
     for (var i = 0; i < 3; i++) {
         queue.msgQueue.register(function (myTask, callback) {
-            console.log('One of five ungrouped workers for ' + queue.name  + ' - processing task ' + util.inspect(myTask) + '.');
+            console.log('One of five grouped workers for ' + queue.name  + ' - processing task ' + util.inspect(myTask) + '.');
 
             // Assume that some work is being done at this time
             return setTimeout(function (myTask, callback) {
-                console.log('One of five ungrouped workers for ' + queue.name  + ' - processing task ' + util.inspect(myTask) + '.');
+                console.log('One of five grouped workers for ' + queue.name  + ' - processing task ' + util.inspect(myTask) + '.');
                 return callback();
             }, 500, myTask, callback);
 
