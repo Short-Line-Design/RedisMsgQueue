@@ -24,13 +24,19 @@ redisMsgQueue.createRedisMsgQueue(app, 'unqueue', function (error, myQueue) {
         console.warn('The example code was unable to create the ungrouped message queue - ' + util.inspect(error) + '.');
     }
     // Assign the returned queue to the example ungrouped message queue
-    unqueue = myQueue;
+    unqueue = { msgQueue: myQueue };
 
     // Register the message queue workers
-    for (var i = 0; i < 2; i++) {
-        unqueue.register(function (myTask, callback) {
-            console.log('Worker ' + i + ' - processing task ' + util.inspect(myTask) + '.');
-            callback();
+    for (var i = 0; i < 4; i++) {
+        unqueue.msgQueue.register(function (myTask, callback) {
+            console.log('One of five ungrouped workers - processing task ' + util.inspect(myTask) + '.');
+
+            // Assume that some work is being done at this time
+            return setTimeout(function (myTask, callback) {
+                console.log('One of five ungrouped workers - processing task ' + util.inspect(myTask) + '.');
+                return callback();
+            }, 2500, myTask, callback);
+
         }, function (error, worker) {
             if (error) {
                 console.warn('The example code was unable to register the ungrouped message queue worker ' + i +
@@ -42,9 +48,9 @@ redisMsgQueue.createRedisMsgQueue(app, 'unqueue', function (error, myQueue) {
 
     // Add a few tasks to the example ungrouped message queue
     console.log('Adding a few tasks to the ungrouped message queue.');
-    for (var i = 0; i < 1; i++) {
-        var task = { name:'un-task ' + i, number: i };
-        unqueue.enqueue(undefined, task, function (error, myTask) {
+    for (var j = 0; j < 500; j++) {
+        var task = { name:'un-task ' + j, number: j };
+        unqueue.msgQueue.enqueue(undefined, task, function (error, myTask) {
             if (error) {
                 console.warn('The example was unable to add the task ' + util.inspect(task) +
                              ' to the ungrouped message queue - ' + util.inspect(myTask) +
@@ -55,16 +61,21 @@ redisMsgQueue.createRedisMsgQueue(app, 'unqueue', function (error, myQueue) {
 });
 
 // Setup the grouped message queues
-/*
 console.log('Setup each grouped message queue.');
 queues.forEach(function (queue) {
     queue.msgQueue = redisMsgQueue.createRedisMsgQueue(app, queue.name);
 
     // Register the message queue workers
-    for (var i = 0; i < 1; i++) {
+    for (var i = 0; i < 3; i++) {
         queue.msgQueue.register(function (myTask, callback) {
-            console.log('Worker ' + i + ' - processing task ' + util.inspect(myTask) + '.');
-            callback();
+            console.log('One of five ungrouped workers for ' + queue.name  + ' - processing task ' + util.inspect(myTask) + '.');
+
+            // Assume that some work is being done at this time
+            return setTimeout(function (myTask, callback) {
+                console.log('One of five ungrouped workers for ' + queue.name  + ' - processing task ' + util.inspect(myTask) + '.');
+                return callback();
+            }, 500, myTask, callback);
+
         }, function (error, worker) {
             if (error) {
                 console.warn('The example code was unable to register the grouped message queue worker ' + i +
@@ -77,8 +88,8 @@ queues.forEach(function (queue) {
     // Add a few tasks to the each grouped message queue
     console.log('Adding a few tasks to the grouped message queue.');
     groups.forEach(function (group) {
-        for (var i = 0; i < 5; i++) {
-            var task = { name:'task ' + i, number: i };
+        for (var j = 0; j < 250; j++) {
+            var task = { name:'task ' + j, number: j, queue: queue.name, group: group };
             queue.msgQueue.enqueue(group, task, function (error, myTask) {
                 if (error) {
                     console.warn('The example was unable to add the task ' + util.inspect(task) +
@@ -89,4 +100,3 @@ queues.forEach(function (queue) {
         }
     });
 });
-*/
